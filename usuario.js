@@ -85,20 +85,67 @@ bodyProductos = $('#bodyProductos').val();
 
 $('form').submit(function(e){
   e.preventDefault();
-  let nombre = $('#nombre').val();
-  let login = $('#login').val();
-  let estado = $('#estado').val();
-  let rol = $('#rol').val();
+
+  // Obtén una referencia al elemento select
+const selectElement = document.getElementById('rol'); // Reemplaza 'miSelect' con el ID de tu elemento select
+
+  let pn = $('#pn').val();
+  let sn = $('#sn').val();
+  let pa = $('#pa').val();
+  let sa = $('#sa').val();
+  let cedula = $('#cedula').val();
+
+
+  let contrasenia= $('#contrasenia').val();
+
+  let login = $('#usuario').val();
+ // let estado = "Activo";
+ if (selectElement.value === "1") {
+  rol = "Admin";
+} else if (selectElement.value === "2") {
+  rol = "Colector";
+}
   
+  /*
    let idFirebase = id;
   if(idFirebase == ''){
    idFirebase = coleccionProductos.push().key;
-  }; 
-  data = {nombre:nombre, login: login, estado: estado,rol:rol};
+  }; */
+
+  //data = {nombre:nombre, login: login, estado: estado,rol:rol};
+
+   nuevoUsuario = {
+    "carteras": {
+      "-LNmY0JlA3f8QGA1hqQu":"true"//se establece para un nuevo usuario
+    },
+    "contrasenia": contrasenia,
+    "gestor": {
+      "apellidos": pa+" "+sa,
+      "cedula": cedula,
+      "nombreCompleto": pn+" "+sn+" "+pa+" "+sa,
+      "nombres": pn+" "+sn
+    },
+    "login": login,
+    "roles": {
+      // Define los roles del nuevo usuario aquí
+      [rol]:"true"
+    },
+    "status": "Activo", // Define el estado del nuevo usuario
+    "ultimoInicioSesion": "" // Establece la fecha y hora actual como último inicio de sesión
+  };
+
+/*
   actualizacionData = {};
-  actualizacionData[`/${idFirebase}`] = data;
-  coleccionProductos.update(actualizacionData);
-  id = '';
+  actualizacionData = nuevoUsuario;
+  console.log("---------actualizacionData-----------------");
+  console.log(actualizacionData);
+  console.log(actualizacionData[`${nuevoUsuario.login}`]);
+*/
+
+  coleccionProductos.child(nuevoUsuario.login).set(nuevoUsuario);
+  //coleccionProductos.push(actualizacionData);
+  
+  //id = '';
   $('form').trigger('reset');
   $('#modalAltaEdicion').modal('hide');
 });
