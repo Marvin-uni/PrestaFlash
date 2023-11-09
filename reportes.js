@@ -20,33 +20,17 @@ var config = {
 
 firebase.initializeApp(config);
 
-
-const dbRef = firebase.database().ref();
-const db = firebase.database();
 /*
-const usersRef = dbRef.child('usuarios');
-const userListUI = document.getElementById("userList");
+const dbRef = firebase.database().ref();
+const db = firebase.database();*/
 
-usersRef.on("child_added", snap => {
+const db2 = firebase.database();
 
-	let user = snap.val();
-
-	let $li = document.createElement("li");
-	$li.innerHTML = user.login;
-	$li.setAttribute("child-key", snap.key);
-	$li.addEventListener("click", userClicked)
-	userListUI.append($li);
-
-});*/
+//const movimientosDiaRef = db2.ref('movimientos_dia');
 
 // Ventana modal
 var modal = document.getElementById("modalAltaEdicion");
- //var span = document.getElementsByClassName("cerrar")[0];
-// Si el usuario hace clic en la x, la ventana se cierra
-/* span.addEventListener("click",function() {
-  modal.style.display = "none";
-}); 
- */
+
 // Si el usuario hace clic fuera de la ventana, se cierra.
 window.addEventListener("click",function(event) {
   if (event.target == modal) {
@@ -58,7 +42,7 @@ function userClicked(e) {
 
 	var userID = e.target.getAttribute("child-key");
 
-	const userRef = dbRef.child('usuarios/' + userID);
+	const userRef = dbRef.child('movimientos_dia/' + userID);
 	const userDetailUI = document.getElementById("userDetail");
 
 	userDetailUI.innerHTML = ""
@@ -77,10 +61,277 @@ function userClicked(e) {
  // Initialize Firebase
 //firebase.initializeApp(firebaseConfig);
 //const db = firebase.database();
-coleccionProductos = db.ref().child('usuarios');
-bodyProductos = $('#bodyProductos').val();
-//console.log(bodyProductos); 
-//console.log(coleccionProductos.val); 
+//coleccionProductos = db.ref().child('dispositivos');
+//coleccionProductos = db.ref.child('movimientos_dia');
+
+const movimientosRef = db2.ref('movimientos_dia');
+console.log("------66--movimientos_dia---key---->>>");
+const informe = [];
+let totalMontoAbonado = 0; 
+var resultados = [];
+
+document.getElementById('buscarButton').addEventListener('click', () => {
+    const fechaInicio2 = document.getElementById('fechaInicio').value;
+    const fechaFin2 = document.getElementById('fechaFin').value;
+
+    //---
+      // Reformatea las fechas en el formato yyyymmdd.
+  const fechaInicio = fechaInicio2.split('-').join('');
+  const fechaFin = fechaFin2.split('-').join('');
+
+  console.log('Fecha de inicio:', fechaInicio);
+  console.log('Fecha de fin:', fechaFin);
+
+
+consultarMovimientos(fechaInicio, fechaFin, resultados)
+  .then(function(resultados) {
+    console.log("Resultados:------>>>", resultados);
+
+    resultados.forEach(function(result) {
+      let tr = document.createElement('tr');
+      tr.innerHTML = mostrarProductos(result.nombreCliente, result.cartera, result.montoAbonado, result.fecha);
+      document.getElementById('bodyProductos').appendChild(tr);
+
+       // Suma el monto abonado al total.
+       totalMontoAbonado += result.montoAbonado;
+    });
+              // Una vez que tengas el totalMontoAbonado, actualiza el elemento en tu HTML.
+              const totalMontoAbonadoElement = document.getElementById('totalMontoAbonado');
+              totalMontoAbonadoElement.textContent = 'Total de montos abonados: ' + totalMontoAbonado;
+  })
+  .catch(function(error) {
+    console.log("Error al consultar Firebase Realtime Database:", error);
+  });
+
+})
+
+
+
+
+function consultarMovimientos(fechaInicio, fechaFin, resultados) {
+    return movimientosRef.orderByKey().startAt(fechaInicio).endAt(fechaFin).once("value")
+      .then(function(snapshot) {
+        var promesasCarteras = [];
+  
+        snapshot.forEach(function(fechaSnapshot) {
+          var fecha = fechaSnapshot.key;
+          var movimientosPorFecha = fechaSnapshot.val();
+  
+          for (var carteraId in movimientosPorFecha) {
+            var carteraMovimientos = movimientosPorFecha[carteraId];
+            var carteraRef = db2.ref("carteras/" + carteraId);
+            var carteraNombre;
+  
+            promesasCarteras.push(
+              carteraRef.once("value")
+                .then(function(carteraSnapshot) {
+                  var carteraData = carteraSnapshot.val();
+                  carteraNombre = carteraData ? carteraData.nombre : "N/A";
+                })
+            );
+  
+            for (var prestamoId in carteraMovimientos) {
+              var prestamoData = carteraMovimientos[prestamoId];
+              var clienteId = prestamoData.clienteId;
+              var montoAbono = prestamoData.montoAbonado;
+              var clienteRef = db2.ref("clientes/" + clienteId);
+              console.log("--montoAbono-->>>",montoAbono);
+
+              // Utiliza una función de promesa para mantener el contexto de 'prestamoData'
+              function obtenerMontoAbonado(montoAbono) {
+
+                return clienteRef.once("value")
+                  .then(function(clienteSnapshot) {
+                    var clienteData = clienteSnapshot.val();
+
+                    
+  
+                    resultados.push({
+                      nombreCliente: clienteData ? clienteData.nombreCompleto : "N/A",
+                      cartera: carteraNombre,
+                      montoAbonado: montoAbono,
+                      fecha: fecha
+                    });
+                  });
+              }
+  
+              promesasCarteras.push(obtenerMontoAbonado(montoAbono));
+            }
+          }
+        });
+  
+        // Esperar a que todas las promesas se completen antes de devolver los resultados
+        return Promise.all(promesasCarteras)
+          .then(function() {
+            return resultados;
+          });
+      });
+  }
+
+//-------------------------->>>
+/////////////////////REPORTES
+    // Array para almacenar los resultados
+    var resultadosArray = [];
+//*//***************recuperaciones
+document.getElementById('buscarButtonC').addEventListener('click', () => {
+    console.log("entrooooooo");
+  
+    var fechaInicio2 = document.getElementById('fechaInicioc').valueAsNumber;
+    var fechaFin2 = document.getElementById('fechaFinc').valueAsNumber;
+  
+    // Referencia a la colección de prestamos
+    var prestamosRef = db2.ref("prestamos");
+  
+
+  
+    // Realiza la consulta con el rango de fechas
+    prestamosRef.orderByChild("fechaDesembolso").startAt(fechaInicio2).endAt(fechaFin2).once("value")
+      .then(function(snapshot) {
+        snapshot.forEach(function(prestamoSnapshot) {
+          var prestamoData = prestamoSnapshot.val();
+  
+          // Obtiene información del cliente y del plan de financiamiento
+          var clienteData = prestamoData.cliente;
+          var planData = prestamoData.planDeFinanciamiento;
+  
+          // Crea un objeto con los datos que necesitas
+          var resultado = {
+            nombreCliente: clienteData.nombreCompleto,
+            capitalPrestado: prestamoData.capitalPrestado,
+            descripcionPlan: planData.descripcion,
+            frecuenciaPago: prestamoData.frecuenciaDePago,
+            interesEfectivo: planData.interesEfectivo,
+            plazoEnDias: planData.plazoEnDias
+          };
+  
+          // Agrega el resultado al array
+          resultadosArray.push(resultado);
+  
+          // Consulta la colección "carteras" para obtener el nombre de la cartera
+          var carteraId = prestamoData.carteraId;
+          var carterasRef = db2.ref("carteras/" + carteraId);
+          carterasRef.once("value")
+            .then(function(carteraSnapshot) {
+              var carteraData = carteraSnapshot.val();
+              
+              // Agrega el nombre de la cartera al resultado
+              resultado.nombreCartera = carteraData ? carteraData.nombre : "N/A";
+  
+              // Crea la fila de la tabla y agrega los resultados
+              let tr = document.createElement('tr');
+              tr.innerHTML = mostrarProductosC(
+                resultado.nombreCliente,
+                resultado.nombreCartera,
+                resultado.capitalPrestado,
+                resultado.descripcionPlan,
+                resultado.frecuenciaPago,
+                resultado.interesEfectivo,
+                resultado.plazoEnDias
+              );
+  
+              // Agrega la fila a la tabla
+              document.getElementById('bodycolocacion').appendChild(tr);
+            })
+            .catch(function(carteraError) {
+              console.error("Error al obtener información de la cartera:", carteraError);
+            });
+        });
+      })
+      .catch(function(error) {
+        console.error("Error al realizar la consulta:", error);
+      });
+  });
+  
+  document.getElementById('exportXlsButton').addEventListener('click', () => {
+    // Crear un objeto de trabajo de Excel
+    var wb = XLSX.utils.book_new();
+    
+    // Crear una hoja de trabajo
+    var ws = XLSX.utils.json_to_sheet(resultados);
+  
+    // Agregar la hoja de trabajo al libro
+    XLSX.utils.book_append_sheet(wb, ws, 'Resultados');
+  
+    // Generar un archivo Excel
+    XLSX.writeFile(wb, 'resultados.xlsx');
+  });
+/*
+  document.getElementById('exportPDFButton').addEventListener('click', () => {
+    // Crear un objeto de documento PDF
+    var pdf = new jsPDF();
+  
+    // Configurar la posición inicial para escribir en el PDF
+    var y = 10;
+  
+    // Iterar sobre los resultados y agregarlos al PDF
+    resultados.forEach(function(resultados) {
+      pdf.text(10, y, `Nombre Cliente: ${resultados.nombreCliente}`);
+      pdf.text(10, y + 10, `Nombre Cartera: ${resultados.nombreCartera}`);
+      // ... Agregar otros campos según sea necesario
+      y += 20; // Ajustar el espacio entre las líneas
+    });
+  
+    // Guardar o mostrar el archivo PDF
+    pdf.save('resultados.pdf');
+  });
+
+*/
+  document.getElementById('exportXlsButtonC').addEventListener('click', () => {
+    // Crear un objeto de trabajo de Excel
+    var wb = XLSX.utils.book_new();
+    
+    // Crear una hoja de trabajo
+    var ws = XLSX.utils.json_to_sheet(resultadosArray);
+  
+    // Agregar la hoja de trabajo al libro
+    XLSX.utils.book_append_sheet(wb, ws, 'Resultados');
+  
+    // Generar un archivo Excel
+    XLSX.writeFile(wb, 'resultados.xlsx');
+  });
+
+/*
+  document.getElementById('exportarPDFButtonC').addEventListener('click', () => {
+    // Crear un objeto de documento PDF
+    var pdf = new jsPDF();
+  
+    // Configurar la posición inicial para escribir en el PDF
+    var y = 10;
+  
+    // Iterar sobre los resultados y agregarlos al PDF
+    resultadosArray.forEach(function(resultadosArray) {
+      pdf.text(10, y, `Nombre Cliente: ${resultadosArray.nombreCliente}`);
+      pdf.text(10, y + 10, `Nombre Cartera: ${resultadosArray.nombreCartera}`);
+      // ... Agregar otros campos según sea necesario
+      y += 20; // Ajustar el espacio entre las líneas
+    });
+  
+    // Guardar o mostrar el archivo PDF
+    pdf.save('resultados.pdf');
+  });
+*/
+/********
+ * 
+ */
+
+document.getElementById('limpiarTablaButton').addEventListener('click', () => {
+    // Limpia el contenido de la tabla
+    console.log("limpiaaaaaaaaa bodyProductos");
+    document.getElementById('bodyProductos').innerHTML = '';
+    resultados = [];
+    totalMontoAbonado=0;
+  });
+
+
+document.getElementById('limpiarTablaButtonC').addEventListener('click', () => {
+    // Limpia el contenido de la tabla
+    console.log("limpiaaaaaaaaa bodycolocacion");
+    document.getElementById('bodycolocacion').innerHTML = '';
+    resultadosArray = [];
+  });
+  
+
+/////////////////////////*/
 
 
 $('form').submit(function(e){
@@ -162,11 +413,31 @@ function mostrarProductos(nombre, login, estado,rol){
   <td>${login}</td>
   <td>${estado}</td>
   <td>${rol}</td>
-  <td><button class="btnBorrar btn btn-danger" data-toggle="tooltip" title="Borrar">${iconoEditar}</button></td>
   `
 };
 
+function mostrarProductosC(nombreCliente, nombreCartera, 
+    capitalPrestado,descripcionPlan,frecuenciaPago,interesEfectivo,plazoEnDias){
+    /*resultadosArray.nombreCliente, 
+    resultadosArray.nombreCartera,
+    resultadosArray.capitalPrestado,
+    resultadosArray.descripcionPlan,
+    resultadosArray.frecuenciaPago,
+    resultadosArray.interesEfectivo,
+    resultadosArray.plazoEnDias,*/
+  
+    return `
+    <td>${nombreCliente}</td>
+    <td>${nombreCartera}</td>
+    <td>${capitalPrestado}</td>
+    <td>${descripcionPlan}</td>
+    <td>${frecuenciaPago}</td>
+    <td>${interesEfectivo}</td>
+    <td>${plazoEnDias}</td>
+    `
+  };
 
+/*
 //CHILD_ADDED
 coleccionProductos.on('child_added', data =>{
 
@@ -175,22 +446,22 @@ coleccionProductos.on('child_added', data =>{
  // let usuarios = snap.val();
 	//$li.innerHTML = user.login;
   let usuarios = data.val();
-    let gestor = data.child("gestor/nombreCompleto").val();
+    let gestor = data.child("movimientos_dia").val();
 
   let tr = document.createElement('tr')
   tr.id = data.key
   //tr.innerHTML = mostrarProductos(data.val())
-coleccionProductos = db.ref().child('usuarios');
+coleccionProductos = db.ref().child('movimientos_dia');
   tr.innerHTML = mostrarProductos(data.child("gestor/nombreCompleto").val(),usuarios.login,usuarios.status,Object.keys(data.child("roles/").val()))
   document.getElementById('bodyProductos').appendChild(tr)
-});
+});*/
 
-
+/*
 //CHILD_CHANGED
 coleccionProductos.on('child_changed', data =>{
   let nodoEditado = document.getElementById(data.key)
   nodoEditado.innerHTML = mostrarProductos(data.val())
-});
+});*/
 // //CHILD_REMOVED
 // coleccionProductos.on('child_removed', data =>{
 //   let nodoEditado = document.getElementById(data.key)
