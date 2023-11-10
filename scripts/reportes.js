@@ -65,7 +65,7 @@ function userClicked(e) {
 //coleccionProductos = db.ref.child('movimientos_dia');
 
 const movimientosRef = db2.ref('movimientos_dia');
-console.log("------66--movimientos_dia---key---->>>");
+
 const informe = [];
 let totalMontoAbonado = 0; 
 var resultados = [];
@@ -79,13 +79,10 @@ document.getElementById('buscarButton').addEventListener('click', () => {
   const fechaInicio = fechaInicio2.split('-').join('');
   const fechaFin = fechaFin2.split('-').join('');
 
-  console.log('Fecha de inicio:', fechaInicio);
-  console.log('Fecha de fin:', fechaFin);
 
 
 consultarMovimientos(fechaInicio, fechaFin, resultados)
   .then(function(resultados) {
-    console.log("Resultados:------>>>", resultados);
 
     resultados.forEach(function(result) {
       let tr = document.createElement('tr');
@@ -135,7 +132,6 @@ function consultarMovimientos(fechaInicio, fechaFin, resultados) {
               var clienteId = prestamoData.clienteId;
               var montoAbono = prestamoData.montoAbonado;
               var clienteRef = db2.ref("clientes/" + clienteId);
-              console.log("--montoAbono-->>>",montoAbono);
 
               // Utiliza una función de promesa para mantener el contexto de 'prestamoData'
               function obtenerMontoAbonado(montoAbono) {
@@ -174,7 +170,7 @@ function consultarMovimientos(fechaInicio, fechaFin, resultados) {
     var resultadosArray = [];
 //*//***************recuperaciones
 document.getElementById('buscarButtonC').addEventListener('click', () => {
-    console.log("entrooooooo");
+//console.log("entrooooo");
   
     var fechaInicio2 = document.getElementById('fechaInicioc').valueAsNumber;
     var fechaFin2 = document.getElementById('fechaFinc').valueAsNumber;
@@ -253,7 +249,7 @@ document.getElementById('buscarButtonC').addEventListener('click', () => {
     XLSX.utils.book_append_sheet(wb, ws, 'Resultados');
   
     // Generar un archivo Excel
-    XLSX.writeFile(wb, 'resultados.xlsx');
+    XLSX.writeFile(wb, 'recuperacionesDel'+document.getElementById('fechaInicio').value+'Al'+document.getElementById('fechaFin').value +'.xlsx');
   });
 /*
   document.getElementById('exportPDFButton').addEventListener('click', () => {
@@ -287,7 +283,7 @@ document.getElementById('buscarButtonC').addEventListener('click', () => {
     XLSX.utils.book_append_sheet(wb, ws, 'Resultados');
   
     // Generar un archivo Excel
-    XLSX.writeFile(wb, 'resultados.xlsx');
+    XLSX.writeFile(wb, 'colocacionesDel'+document.getElementById('fechaInicioc').value+'Al'+document.getElementById('fechaFinc').value +'.xlsx');
   });
 
 /*
@@ -316,7 +312,7 @@ document.getElementById('buscarButtonC').addEventListener('click', () => {
 
 document.getElementById('limpiarTablaButton').addEventListener('click', () => {
     // Limpia el contenido de la tabla
-    console.log("limpiaaaaaaaaa bodyProductos");
+
     document.getElementById('bodyProductos').innerHTML = '';
     resultados = [];
     totalMontoAbonado=0;
@@ -325,7 +321,7 @@ document.getElementById('limpiarTablaButton').addEventListener('click', () => {
 
 document.getElementById('limpiarTablaButtonC').addEventListener('click', () => {
     // Limpia el contenido de la tabla
-    console.log("limpiaaaaaaaaa bodycolocacion");
+
     document.getElementById('bodycolocacion').innerHTML = '';
     resultadosArray = [];
   });
@@ -385,14 +381,6 @@ const selectElement = document.getElementById('rol'); // Reemplaza 'miSelect' co
     "ultimoInicioSesion": "" // Establece la fecha y hora actual como último inicio de sesión
   };
 
-/*
-  actualizacionData = {};
-  actualizacionData = nuevoUsuario;
-  console.log("---------actualizacionData-----------------");
-  console.log(actualizacionData);
-  console.log(actualizacionData[`${nuevoUsuario.login}`]);
-*/
-
   coleccionProductos.child(nuevoUsuario.login).set(nuevoUsuario);
   //coleccionProductos.push(actualizacionData);
   
@@ -437,36 +425,7 @@ function mostrarProductosC(nombreCliente, nombreCartera,
     `
   };
 
-/*
-//CHILD_ADDED
-coleccionProductos.on('child_added', data =>{
 
-
-  console.log(Object.keys(data.child("roles/").val()));
- // let usuarios = snap.val();
-	//$li.innerHTML = user.login;
-  let usuarios = data.val();
-    let gestor = data.child("movimientos_dia").val();
-
-  let tr = document.createElement('tr')
-  tr.id = data.key
-  //tr.innerHTML = mostrarProductos(data.val())
-coleccionProductos = db.ref().child('movimientos_dia');
-  tr.innerHTML = mostrarProductos(data.child("gestor/nombreCompleto").val(),usuarios.login,usuarios.status,Object.keys(data.child("roles/").val()))
-  document.getElementById('bodyProductos').appendChild(tr)
-});*/
-
-/*
-//CHILD_CHANGED
-coleccionProductos.on('child_changed', data =>{
-  let nodoEditado = document.getElementById(data.key)
-  nodoEditado.innerHTML = mostrarProductos(data.val())
-});*/
-// //CHILD_REMOVED
-// coleccionProductos.on('child_removed', data =>{
-//   let nodoEditado = document.getElementById(data.key)
-//   document.getElementById('bodyProductos').removeChild(nodoEditado)
-// });
 //Programación de los botones
 $('#btnNuevo').click(function(){
   $('#id').val('');
@@ -478,13 +437,8 @@ $('#btnNuevo').click(function(){
 });
 
 $('#tablaProductos').on('click', '.btnEditar', function(){
-  //let id = $(this).closest('tr').attr('id');
-  //let nombre = $(this).closest('tr').find('td:eq(0)').text();
- // let login = $(this).closest('tr').find('td:eq(1)').text();
-  let rol = $(this).closest('tr').find('td:eq(2)').text();
- // $('#id').val(id);
-  //$('#codigo').val(codigo);
-  //$('#descripcion').val(descripcion);                
+
+  let rol = $(this).closest('tr').find('td:eq(2)').text();               
   $('#rol').val(cantidad);                
   $('#modalAltaEdicion').modal('show');
 });
@@ -494,8 +448,7 @@ $('#tablaProductos').on('click', '.btnEditar', function(){
 
   let id = $(this).closest('tr').attr('id'); //capturamos el atributo ID de la fila  
   let nombre = $(this).closest('tr').find('td:eq(0)').text(); //capturamos el atributo ID de la fila 
-  console.log(id);
-  console.log(nombre);
+
      Swal.fire({
        title: '¿Está seguro de inactivar el usuario?',
        text: "¡Se inactivara el usuario! "+" nombre: "+nombre,

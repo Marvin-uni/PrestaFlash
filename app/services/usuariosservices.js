@@ -6,7 +6,6 @@ class UsuariosServices{
     constructor() {
 this.database = database;
 this.usuarioRef=  ref(this.database,"usuarios");//ref me dice la tabla que quiero de la BD
-//console.log(database.val);
 }
 getUsuarios(){
         const promise=new Promise((resolve, reject)=>{

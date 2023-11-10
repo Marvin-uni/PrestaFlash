@@ -1,6 +1,4 @@
-//import { signOut } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js"
-//import { signOut } from "https://www.gstatic.com/firebasejs/7.15.0/firebase.js"
-//import { auth } from "./firebase.js";
+
 const loggedOutLinks = document.querySelectorAll(".logged-out");
 const loggedInLinks = document.querySelectorAll(".logged-in");
 const logout = document.querySelector("#logout");

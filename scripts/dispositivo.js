@@ -20,48 +20,25 @@ var config = {
 
 firebase.initializeApp(config);
 
-
 const dbRef = firebase.database().ref();
 const db = firebase.database();
-
 const usersRef = dbRef.child('dispositivos');
 const userListUI = document.getElementById("userList");
 
-
-
- // Initialize Firebase
-//firebase.initializeApp(firebaseConfig);
-//const db = firebase.database();
 coleccionProductos = db.ref().child('dispositivos');
 bodyProductos = $('#bodyProductos').val();
-//console.log(bodyProductos); 
-//console.log(coleccionProductos.val); 
-
 //para actualizar
 $('form').submit(function(e){
   e.preventDefault();
-console.log("entro a guardar en modal alta");
-
   let nombre = $('#nombre').val();
   let imei = $('#imei').val();
   let estado ='Activo';
-  //let estado = $('#estado').val();
-  //let rol = $('#rol').val();
-   
-  /* let idFirebase = id;
-  if(idFirebase == ''){*/
+
    idFirebase = coleccionProductos.push().key;
-  /*};*/ 
 
-
-  console.log(idFirebase);
-  
   data = {estado: estado,idDispositivo:idFirebase, imei: imei,nombre:nombre};
   actualizacionData = {};
-  //actualizacionData[`/${idFirebase}`] = data;
-  actualizacionData= data;
-  console.log(' datos en actualizacionData');
-  console.log(actualizacionData);
+  actualizacionData= data
   coleccionProductos.push(actualizacionData);
   id = '';
   $('form').trigger('reset');
@@ -72,7 +49,7 @@ console.log("entro a guardar en modal alta");
 //para cancelar
 $('#btnCancelar').submit(function(e){
   e.preventDefault();
-  console.log("entro a cANCELAR en modal alta");
+ // console.log("entro a cANCELAR en modal alta");
 
 });
 
@@ -94,11 +71,8 @@ function mostrarProductos(nombre, imei, estado){
 
 //CHILD_ADDED
 coleccionProductos.on('child_added', data =>{
- // let usuarios = snap.val();
-	//$li.innerHTML = user.login;
-  let dispositivos = data.val();
-    //let gestor = data.child("gestor/nombreCompleto").val();
 
+  let dispositivos = data.val();
   let tr = document.createElement('tr')
   tr.id = data.key
   //tr.innerHTML = mostrarProductos(data.val())
@@ -148,9 +122,6 @@ $('#tablaProductos').on('click', '.btnEditar', function(){
 $('#tablaProductos').on('click', '.btnBorrar', function(){
   let id = $(this).closest('tr').attr('id'); //capturamos el atributo ID de la fila  
   let nombre = $(this).closest('tr').find('td:eq(0)').text(); //capturamos el atributo ID de la fila 
-  console.log(id);
-  console.log(nombre);
-  
     Swal.fire({
       title: '¿Está seguro de inactivar el Dispositivo?',
       text: "¡Está operación Inactiva el acceso del dispositivo!" + "\n__________Id: "+ id + "\nNombre: "+ nombre ,

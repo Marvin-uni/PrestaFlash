@@ -8,7 +8,7 @@
     <h1></h1>
     <title>Reportes</title>
     <link rel="styleSheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="./main.css">
+    <link rel="stylesheet" href="../main.css">
 
 </head>
 <body>
@@ -18,7 +18,10 @@
 
     <nav class="navbar navbar-expand-lg bg-dark navbar-dark">
         <div class="container">
-          <a class="navbar-brand" href="#">PrestaFlash</a>
+          <a class="navbar-brand" href="#">
+            <img id="logo" src="../assets/ic_launcher-web-2.png" >
+            PrestaFlash
+          </a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
@@ -34,7 +37,7 @@
                 <a class="nav-link logged-in" href="usuario.html" id="usuarios">Usuarios</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link logged-in" href="dispositivo.html" id="usuarios">Equipos Moviles</a>
+                <a class="nav-link logged-in" href="dispositivo.html" id="dispositivo">Equipos Moviles</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link logged-in" href="#" id="logout">Salir</a>
@@ -123,13 +126,6 @@
   <br>
   <div class="row">
       <div class="col-lg-6">
-<!--         /*resultadosArray.nombreCliente, 
-        resultadosArray.nombreCartera,
-        resultadosArray.capitalPrestado,
-        resultadosArray.descripcionPlan,
-        resultadosArray.frecuenciaPago,
-        resultadosArray.interesEfectivo,
-        resultadosArray.plazoEnDias,*/ -->
             <table id="tablacolocacion" class="table table-bordered  text-light">
               <thead>
                 <tr class="bg-dark text-light">
@@ -140,7 +136,6 @@
                   <th scope="col" class="bg-dark text-light">frecuencia de Pago</th>
                   <th scope="col" class="bg-dark text-light">Interes</th>
                   <th scope="col" class="bg-dark text-light">Plazo En Dias</th>
-                  <!-- <th scope="col" class="bg-dark text-light">ACCIONES</th> -->
                 </tr>
               </thead>
             <tbody id="bodycolocacion" >
@@ -163,98 +158,6 @@
 
             <div class="row">
                 <div class="col-lg-6">
-                    <button id="btnNuevo" class="btn btn-primary" data-toggle="tooltip" title="Agregar Usuario"><svg class="bi bi-plus-circle-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4a.5.5 0 0 0-1 0v3.5H4a.5.5 0 0 0 0 1h3.5V12a.5.5 0 0 0 1 0V8.5H12a.5.5 0 0 0 0-1H8.5V4z"/></svg></button>
-                      <!--Modal-->
-                        <div id="modalAltaEdicion" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header bg-primary text-light">
-                                        <h5 class="modal-title" id="exampleModalLabel">Agregar Usuario</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                        <form>
-                                        <div class="modal-body">
-                                            <input id="id" class="text-dark" type="hidden"> <!-- ID que vamos a recibir de firebase -->
-                                           
-       
-                                            
-                                            <!-- <div class="form-group">
-                                              <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                                              <input id="primernombre" type="text" class="text-dark" name="primernombre" placeholder="Primer Nombre">
-                                            </div>
-                                            <br></br> -->
-                                            <div class="input-group mb-3">
-                                              <div class="input-group-prepend">
-                                                <span class="input-group-text" id="basic-addon1">PN</span>
-                                              </div>
-                                              <input  id="pn" type="text" class="form-control" placeholder="Primer Nombre" aria-label="Primer nombre" aria-describedby="basic-addon1">
-                                            </div>
-      
-                                            <div class="input-group mb-3">
-                                              <div class="input-group-prepend">
-                                                <span class="input-group-text" id="basic-addon1">SN</span>
-                                              </div>
-                                              <input  id="sn"  type="text" class="form-control" placeholder="Segundo Nombre" aria-label="Segundo nombre" aria-describedby="basic-addon1">
-                                            </div>
-      
-                                            <div class="input-group mb-3">
-                                              <div class="input-group-prepend">
-                                                <span class="input-group-text" id="basic-addon1">PA</span>
-                                              </div>
-                                              <input   id="pa"  type="text" class="form-control" placeholder="Primer Apellido" aria-label="Primer Apellido" aria-describedby="basic-addon1">
-                                            </div>
-      
-                                            <div class="input-group mb-3">
-                                              <div class="input-group-prepend">
-                                                <span class="input-group-text" id="basic-addon1">SA</span>
-                                              </div>
-                                              <input   id="sa" type="text" class="form-control" placeholder="Segundo Apellido" aria-label="Segundo Apellido" aria-describedby="basic-addon1">
-                                            </div>
-      
-                                            <div class="input-group mb-3">
-                                              <div class="input-group-prepend">
-                                                <span class="input-group-text" id="basic-addon1">CE</span>
-                                              </div>
-                                              <input   id="cedula"  type="text" class="form-control" placeholder="cedula" aria-label="cedula" aria-describedby="basic-addon1">
-                                            </div>
-      
-                                            <div class="input-group mb-3">
-                                              <div class="input-group-prepend">
-                                                <span class="input-group-text" id="basic-addon1">U</span>
-                                              </div>
-                                              <input   id="usuario"  type="text" class="form-control" placeholder="Usuario" aria-label="Usuario" aria-describedby="basic-addon1">
-                                            </div>
-                                            
-                                            <div class="input-group mb-3">
-                                              <div class="input-group-prepend">
-                                                <span class="input-group-text" id="basic-addon1">C</span>
-                                              </div>
-                                              <input   id="contrasenia"  type="password" class="form-control" placeholder="Contraseña" aria-label="Contraseña" aria-describedby="basic-addon1">
-                                            </div>
-      
-                                            
-                                            
-                                            <div class="input-group mb-3">
-                                              <div class="input-group-prepend">
-                                                <label class="input-group-text" for="inputGroupSelect01">Rol</label>
-                                              </div>
-                                              <select id="rol" class="custom-select" id="inputGroupSelect01">
-                                                <option selected value="1">Admin</option>
-                                                <option value="2">Colector</option>
-                                               </select>
-                                            </div>
-      
-      
-                                        
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                            <button type="submit" id="btnGuardar" class="btn btn-primary" translate="1">Guardar</button>
-                                        </div>
-                                      </div>
-                                       </form>
-                            </div>
-                        </div>
-                        </div>
                       <table id="tablaProductos" class="table table-bordered  text-light">
                         <thead>
                           <tr class="bg-dark text-light">
@@ -294,13 +197,13 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"></script>
   <!-- Toastify js -->
   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-   <script src="./reportes.js" type="module"></script>
+   <script src="../scripts/reportes.js" type="module"></script>
       <!-- Optional JavaScript -->
 
     <!-- The core Firebase JS SDK is always required and must be listed first -->
     <!--<script src="https://www.gstatic.com/firebasejs/7.15.0/firebase.js"></script>-->
     <script src="https://www.gstatic.com/firebasejs/4.8.1/firebase.js"></script>
-     <script type="text/javascript" src="reportes.js"></script>
+     <script type="text/javascript" src="../scripts/reportes.js"></script>
      <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.4/xlsx.full.min.js"></script>
 </body>
 </html>

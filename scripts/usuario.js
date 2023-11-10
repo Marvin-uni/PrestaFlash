@@ -74,13 +74,10 @@ function userClicked(e) {
 	});
 
 }
- // Initialize Firebase
-//firebase.initializeApp(firebaseConfig);
-//const db = firebase.database();
+
 coleccionProductos = db.ref().child('usuarios');
 bodyProductos = $('#bodyProductos').val();
-//console.log(bodyProductos); 
-//console.log(coleccionProductos.val); 
+
 
 
 $('form').submit(function(e){
@@ -105,14 +102,6 @@ const selectElement = document.getElementById('rol'); // Reemplaza 'miSelect' co
 } else if (selectElement.value === "2") {
   rol = "Colector";
 }
-  
-  /*
-   let idFirebase = id;
-  if(idFirebase == ''){
-   idFirebase = coleccionProductos.push().key;
-  }; */
-
-  //data = {nombre:nombre, login: login, estado: estado,rol:rol};
 
    nuevoUsuario = {
     "carteras": {
@@ -134,13 +123,6 @@ const selectElement = document.getElementById('rol'); // Reemplaza 'miSelect' co
     "ultimoInicioSesion": "" // Establece la fecha y hora actual como último inicio de sesión
   };
 
-/*
-  actualizacionData = {};
-  actualizacionData = nuevoUsuario;
-  console.log("---------actualizacionData-----------------");
-  console.log(actualizacionData);
-  console.log(actualizacionData[`${nuevoUsuario.login}`]);
-*/
 
   coleccionProductos.child(nuevoUsuario.login).set(nuevoUsuario);
   //coleccionProductos.push(actualizacionData);
@@ -171,15 +153,12 @@ function mostrarProductos(nombre, login, estado,rol){
 coleccionProductos.on('child_added', data =>{
 
 
-  console.log(Object.keys(data.child("roles/").val()));
- // let usuarios = snap.val();
-	//$li.innerHTML = user.login;
+
   let usuarios = data.val();
     let gestor = data.child("gestor/nombreCompleto").val();
 
   let tr = document.createElement('tr')
   tr.id = data.key
-  //tr.innerHTML = mostrarProductos(data.val())
 coleccionProductos = db.ref().child('usuarios');
   tr.innerHTML = mostrarProductos(data.child("gestor/nombreCompleto").val(),usuarios.login,usuarios.status,Object.keys(data.child("roles/").val()))
   document.getElementById('bodyProductos').appendChild(tr)
@@ -192,10 +171,7 @@ coleccionProductos.on('child_changed', data =>{
   nodoEditado.innerHTML = mostrarProductos(data.val())
 });
 // //CHILD_REMOVED
-// coleccionProductos.on('child_removed', data =>{
-//   let nodoEditado = document.getElementById(data.key)
-//   document.getElementById('bodyProductos').removeChild(nodoEditado)
-// });
+
 //Programación de los botones
 $('#btnNuevo').click(function(){
   $('#id').val('');
@@ -207,13 +183,9 @@ $('#btnNuevo').click(function(){
 });
 
 $('#tablaProductos').on('click', '.btnEditar', function(){
-  //let id = $(this).closest('tr').attr('id');
-  //let nombre = $(this).closest('tr').find('td:eq(0)').text();
- // let login = $(this).closest('tr').find('td:eq(1)').text();
+
   let rol = $(this).closest('tr').find('td:eq(2)').text();
- // $('#id').val(id);
-  //$('#codigo').val(codigo);
-  //$('#descripcion').val(descripcion);                
+              
   $('#rol').val(cantidad);                
   $('#modalAltaEdicion').modal('show');
 });
@@ -223,8 +195,7 @@ $('#tablaProductos').on('click', '.btnEditar', function(){
 
   let id = $(this).closest('tr').attr('id'); //capturamos el atributo ID de la fila  
   let nombre = $(this).closest('tr').find('td:eq(0)').text(); //capturamos el atributo ID de la fila 
-  console.log(id);
-  console.log(nombre);
+
      Swal.fire({
        title: '¿Está seguro de inactivar el usuario?',
        text: "¡Se inactivara el usuario! "+" nombre: "+nombre,

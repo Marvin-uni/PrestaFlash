@@ -8,13 +8,16 @@
     <h1></h1>
     <title>Usuarios</title>
     <link rel="styleSheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="./main.css">
+    <link rel="stylesheet" href="../main.css">
 
 </head>
 <body>
     <nav class="navbar navbar-expand-lg bg-dark navbar-dark">
         <div class="container">
-          <a class="navbar-brand" href="#">PrestaFlash</a>
+          <a class="navbar-brand" href="#">
+            <img id="logo" src="../assets/ic_launcher-web-2.png" >
+            PrestaFlash
+          </a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
@@ -30,7 +33,7 @@
                 <a class="nav-link logged-in" href="#" id="usuarios">Usuarios</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link logged-in" href="dispositivo.html" id="usuarios">Equipos Moviles</a>
+                <a class="nav-link logged-in" href="dispositivo.html" id="dispositivo">Equipos Moviles</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link logged-in" href="#" id="logout">Salir</a>
@@ -42,6 +45,7 @@
       </nav>
          <div class="container">
           <h1>Usuarios</h1>
+          <br> </br>
         <div class="row">
           <div class="col-lg-6">
               <button id="btnNuevo" class="btn btn-primary" data-toggle="tooltip" title="Agregar Usuario"><svg class="bi bi-plus-circle-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4a.5.5 0 0 0-1 0v3.5H4a.5.5 0 0 0 0 1h3.5V12a.5.5 0 0 0 1 0V8.5H12a.5.5 0 0 0 0-1H8.5V4z"/></svg></button>
@@ -169,12 +173,12 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"></script>
   <!-- Toastify js -->
   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-  <script src="./usuario.js" type="module"></script>
+  <script src="../scripts/usuario.js" type="module"></script>
       <!-- Optional JavaScript -->
 
     <!-- The core Firebase JS SDK is always required and must be listed first -->
     <!--<script src="https://www.gstatic.com/firebasejs/7.15.0/firebase.js"></script>-->
     <script src="https://www.gstatic.com/firebasejs/4.8.1/firebase.js"></script>
-    <script type="text/javascript" src="usuario.js"></script>
+    <script type="text/javascript" src="../scripts/usuario.js"></script>
 </body>
 </html>
