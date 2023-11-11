@@ -9,6 +9,8 @@
     <title>Reportes</title>
     <link rel="styleSheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="../main.css">
+    <!-- Agrega la biblioteca de íconos de Bootstrap -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
 </head>
 <body>
@@ -20,7 +22,7 @@
         <div class="container">
           <a class="navbar-brand" href="#">
             <img id="logo" src="../assets/ic_launcher-web-2.png" >
-            PrestaFlash
+            <span style="font-size: 30px;">PrestaFlash</span>
           </a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -69,20 +71,37 @@
       <div class="tab-content" id="pills-tabContent">
         <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
             <!-- Recuperaciones por Rango de Fecha -->
-
-            <label for="fechaInicio">Fecha de inicio:</label>
-            <input type="date" id="fechaInicio">
+            <div class="container">
+              <form class="row align-items-end">
+                <div class="col-md-3">
+                  <label for="fechaInicio" class="form-label">Fecha de inicio:</label>
+                  <input type="date" id="fechaInicio" class="form-control">
+                </div>
             
-            <label for="fechaFin">Fecha de fin:</label>
-            <input type="date" id="fechaFin">
+                <div class="col-md-3">
+                  <label for="fechaFin" class="form-label">Fecha de fin:</label>
+                  <input type="date" id="fechaFin" class="form-control">
+                </div>
             
-            <button id="buscarButton">Buscar</button>
-            <button id="limpiarTablaButton">Limpiar Tabla</button>
-
+                <div class="col-md-6 mt-2">
+                  <button id="buscarButton" class="btn btn-primary me-2">
+                    <i class="fa fa-search me-2"></i> Buscar
+                  </button>
+            
+                  <button id="limpiarTablaButton" class="btn btn-primary">
+                    <i class="fa fa-refresh me-2"></i> Limpiar Tabla
+                  </button>
+                </div>
+              </form>
+            </div>
+            
+            
+            
+            
 
             <br>
             <div class="row">
-                <div class="col-lg-6">
+                <div class="col-lg-10">
 
                       <table id="tablaProductos" class="table table-bordered  text-light">
                         <thead>
@@ -99,7 +118,10 @@
                       </table>
                       <div id="totalMontoAbonado"></div>
                       <br>
-                      <button id="exportXlsButton">Exportar a XLS</button>
+                      <button id="exportXlsButton" type="button" class="btn btn-success">
+                        <i class="fa fa-file-excel-o mr-2"></i> 
+                        Exportar a XLS
+                      </button>
                       <!-- <button id="exportPDFButton">Exportar a PDF</button> -->
                 </div>
               </div>
@@ -112,20 +134,34 @@
            <!--  colocaciones -->
 
   <!-- Recuperaciones por Rango de Fecha -->
-
-  <label for="fechaInicioc">Fecha de inicio:</label>
-  <input type="date" id="fechaInicioc">
+   <!-- Recuperaciones por Rango de Fecha -->
+   <div class="container">
+    <form class="row align-items-end">
+      <div class="col-md-3">
+        <label for="fechaInicioc" class="form-label">Fecha de inicio:</label>
+        <input type="date" id="fechaInicioc" class="form-control">
+      </div>
   
-  <label for="fechaFinc">Fecha de fin:</label>
-  <input type="date" id="fechaFinc">
+      <div class="col-md-3">
+        <label for="fechaFinc" class="form-label">Fecha de fin:</label>
+        <input type="date" id="fechaFinc" class="form-control">
+      </div>
   
-  <button id="buscarButtonC">Buscar</button>
-  <button id="limpiarTablaButtonC">Limpiar Tabla</button>
-
-
+      <div class="col-md-6 mt-2">
+        <button id="buscarButtonC" class="btn btn-primary me-2">
+          <i class="fa fa-search me-2"></i> Buscar
+        </button>
+  
+        <button id="limpiarTablaButtonC" class="btn btn-primary">
+          <i class="fa fa-refresh me-2"></i> Limpiar Tabla
+        </button>
+      </div>
+    </form>
+  </div>
   <br>
+
   <div class="row">
-      <div class="col-lg-6">
+      <div class="col-lg-12">
             <table id="tablacolocacion" class="table table-bordered  text-light">
               <thead>
                 <tr class="bg-dark text-light">
@@ -143,8 +179,13 @@
             </table>
             <div id="totalMontocolocado"></div>
             <br>
-            <button id="exportXlsButtonC">Exportar a XLS</button>
-          <!--   <button id="exportPdfButtonC">Exportar a PDF</button> -->
+            <div class="form-group mr-2">
+            <button id="exportXlsButtonC" type="button" class="btn btn-success">
+              <i class="fa fa-file-excel-o mr-2"></i> 
+              Exportar a XLS
+            </button>
+          </div>
+
       </div>
     </div>
 
@@ -189,7 +230,6 @@
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9.14.4/dist/sweetalert2.all.min.js"></script> 
 
