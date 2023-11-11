@@ -68,7 +68,18 @@ function mostrarProductos(nombre, imei, estado){
   `
 };
 
+// En tu archivo JavaScript
+const logoutButton = document.getElementById('logout');
 
+logoutButton.addEventListener('click', () => {
+  firebase.auth().signOut().then(() => {
+    // Logout exitoso, redirige a la página de inicio de sesión
+    window.location.href = '/index.html';
+  }).catch((error) => {
+    // Maneja errores durante el logout
+    console.error("Error durante el logout:", error);
+  });
+});
 //CHILD_ADDED
 coleccionProductos.on('child_added', data =>{
 
@@ -124,7 +135,7 @@ $('#tablaProductos').on('click', '.btnBorrar', function(){
   let nombre = $(this).closest('tr').find('td:eq(0)').text(); //capturamos el atributo ID de la fila 
     Swal.fire({
       title: '¿Está seguro de inactivar el Dispositivo?',
-      text: "¡Está operación Inactiva el acceso del dispositivo!" + "\n__________Id: "+ id + "\nNombre: "+ nombre ,
+      html: "¡Está operación Inactiva el acceso del dispositivo!<br>Id: "+ id + "<br>Nombre: "+ nombre ,//text: "¡Está operación Inactiva el acceso del dispositivo!" + "\nId: "+ id + "\nNombre: "+ nombre ,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#d33',

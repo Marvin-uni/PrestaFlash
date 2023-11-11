@@ -11,6 +11,8 @@
     <link rel="stylesheet" href="../main.css">
     <!-- Agrega la biblioteca de íconos de Bootstrap -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" crossorigin="anonymous">
+
 
 </head>
 <body>
@@ -27,31 +29,46 @@
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
-          <div class="collapse navbar-collapse" id="navbarNav">
+
+<div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
               <li class="nav-item">
-                <a class="nav-link logged-out" href="#" data-bs-toggle="modal" data-bs-target="#entrarModal">Entrar</a>
+                <a class="nav-link logged-out" href="#" data-bs-toggle="modal" data-bs-target="#entrarModal">
+                  Entrar
+                  <i class="fas fa-sign-in-alt ml-2"></i> <!-- Icono de entrada -->
+                </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link logged-in" href="#" id="reportes">Reportes</a>
+                <a class="nav-link logged-in" href="reportes.html" id="reportes">
+                  Reportes
+                  <i class="fas fa-chart-bar ml-2"></i> <!-- Icono de reportes -->
+                </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link logged-in" href="usuario.html" id="usuarios">Usuarios</a>
+                <a class="nav-link logged-in" href="usuario.html" id="usuarios">
+                  Usuarios
+                  <i class="fas fa-users ml-2"></i> <!-- Icono de usuarios -->
+                </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link logged-in" href="dispositivo.html" id="dispositivo">Equipos Moviles</a>
+                <a class="nav-link logged-in" href="dispositivo.html" id="usuarios">
+                  Equipos Moviles
+                  <i class="fas fa-mobile-alt ml-2"></i> <!-- Icono de equipos móviles -->
+                </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link logged-in" href="#" id="logout">Salir</a>
+                <a class="nav-link logged-in" href="#" id="logout">
+                  Salir
+                  <i class="fas fa-sign-out-alt ml-2"></i> <!-- Icono de salida -->
+                </a>
               </li>
-  
             </ul>
           </div>
         </div>
       </nav>
 
          <div class="container">
-          <h1>Reportes</h1>
+          <h1><i class="fas fa-chart-bar ml-2"></i>Reportes</h1>
 
           <br> </br>
               <!--  -->
@@ -161,7 +178,7 @@
   <br>
 
   <div class="row">
-      <div class="col-lg-12">
+      <div class="col-lg-11">
             <table id="tablacolocacion" class="table table-bordered  text-light">
               <thead>
                 <tr class="bg-dark text-light">
@@ -172,6 +189,7 @@
                   <th scope="col" class="bg-dark text-light">frecuencia de Pago</th>
                   <th scope="col" class="bg-dark text-light">Interes</th>
                   <th scope="col" class="bg-dark text-light">Plazo En Dias</th>
+                  <th scope="col" class="bg-dark text-light">Fecha de Desembolso</th>
                 </tr>
               </thead>
             <tbody id="bodycolocacion" >

@@ -20,13 +20,9 @@ var config = {
 
 firebase.initializeApp(config);
 
-/*
-const dbRef = firebase.database().ref();
-const db = firebase.database();*/
 
 const db2 = firebase.database();
 
-//const movimientosDiaRef = db2.ref('movimientos_dia');
 
 // Ventana modal
 var modal = document.getElementById("modalAltaEdicion");
@@ -58,12 +54,6 @@ function userClicked(e) {
 	});
 
 }
- // Initialize Firebase
-//firebase.initializeApp(firebaseConfig);
-//const db = firebase.database();
-//coleccionProductos = db.ref().child('dispositivos');
-//coleccionProductos = db.ref.child('movimientos_dia');
-
 const movimientosRef = db2.ref('movimientos_dia');
 
 const informe = [];
@@ -74,12 +64,29 @@ document.getElementById('buscarButton').addEventListener('click', () => {
     const fechaInicio2 = document.getElementById('fechaInicio').value;
     const fechaFin2 = document.getElementById('fechaFin').value;
 
+
+        // Validar las fechas usando la clase Date
+        const fechaInicioValida = esFechaValida(fechaInicio2);
+        const fechaFinValida = esFechaValida(fechaFin2);
+
+
+        if (!fechaInicioValida || !fechaFinValida) {
+          alert('Por favor, ingrese fechas válidas.');
+          return;
+      }
+
+          // Verificar si la fecha de inicio es menor o igual a la fecha de fin
+    const fechaInicioX = new Date(fechaInicio2);
+    const fechaFinX = new Date(fechaFin2);
+
+    if (fechaInicioX > fechaFinX) {
+        alert('La fecha de inicio debe ser menor o igual a la fecha de fin.');
+        return;
+    }
     //---
       // Reformatea las fechas en el formato yyyymmdd.
   const fechaInicio = fechaInicio2.split('-').join('');
   const fechaFin = fechaFin2.split('-').join('');
-
-
 
 consultarMovimientos(fechaInicio, fechaFin, resultados)
   .then(function(resultados) {
@@ -102,7 +109,11 @@ consultarMovimientos(fechaInicio, fechaFin, resultados)
 
 })
 
-
+function esFechaValida(fecha) {
+  // Verifica si la fecha es válida usando la clase Date
+  const date = new Date(fecha);
+  return !isNaN(date);
+}
 
 
 function consultarMovimientos(fechaInicio, fechaFin, resultados) {
@@ -168,13 +179,32 @@ function consultarMovimientos(fechaInicio, fechaFin, resultados) {
 /////////////////////REPORTES
     // Array para almacenar los resultados
     var resultadosArray = [];
-//*//***************recuperaciones
+//*//***************colocaciones
 document.getElementById('buscarButtonC').addEventListener('click', () => {
 //console.log("entrooooo");
   
     var fechaInicio2 = document.getElementById('fechaInicioc').valueAsNumber;
     var fechaFin2 = document.getElementById('fechaFinc').valueAsNumber;
   
+
+     // Validar las fechas usando la clase Date
+     const fechaInicioValida = esFechaValida(fechaInicio2);
+     const fechaFinValida = esFechaValida(fechaFin2);
+
+
+     if (!fechaInicioValida || !fechaFinValida) {
+       alert('Por favor, ingrese fechas válidas.');
+       return;
+   }
+
+       // Verificar si la fecha de inicio es menor o igual a la fecha de fin
+ const fechaInicioX = new Date(fechaInicio2);
+ const fechaFinX = new Date(fechaFin2);
+
+ if (fechaInicioX > fechaFinX) {
+     alert('La fecha de inicio debe ser menor o igual a la fecha de fin.');
+     return;
+ }
     // Referencia a la colección de prestamos
     var prestamosRef = db2.ref("prestamos");
   
@@ -197,7 +227,8 @@ document.getElementById('buscarButtonC').addEventListener('click', () => {
             descripcionPlan: planData.descripcion,
             frecuenciaPago: prestamoData.frecuenciaDePago,
             interesEfectivo: planData.interesEfectivo,
-            plazoEnDias: planData.plazoEnDias
+            plazoEnDias: planData.plazoEnDias,
+            fechaDesembolso: convertirTimestampAFecha(prestamoData.fechaDesembolso),
           };
   
           // Agrega el resultado al array
@@ -222,7 +253,8 @@ document.getElementById('buscarButtonC').addEventListener('click', () => {
                 resultado.descripcionPlan,
                 resultado.frecuenciaPago,
                 resultado.interesEfectivo,
-                resultado.plazoEnDias
+                resultado.plazoEnDias,
+                resultado.fechaDesembolso
               );
   
               // Agrega la fila a la tabla
@@ -237,6 +269,21 @@ document.getElementById('buscarButtonC').addEventListener('click', () => {
         console.error("Error al realizar la consulta:", error);
       });
   });
+
+  function convertirTimestampAFecha(timestamp) {
+    // Crea un objeto Date usando el timestamp (milisegundos desde la Época)
+    const fecha = new Date(timestamp);
+  
+    // Obtiene los componentes de la fecha
+    const dia = fecha.getDate().toString().padStart(2, '0');
+    const mes = (fecha.getMonth() + 1).toString().padStart(2, '0'); // ¡Recuerda que los meses comienzan desde 0!
+    const año = fecha.getFullYear();
+  
+    // Combina los componentes en un formato legible
+    const fechaLegible = `${dia}/${mes}/${año}`;
+  
+    return fechaLegible;
+  }
   
   document.getElementById('exportXlsButton').addEventListener('click', () => {
     // Crear un objeto de trabajo de Excel
@@ -251,27 +298,7 @@ document.getElementById('buscarButtonC').addEventListener('click', () => {
     // Generar un archivo Excel
     XLSX.writeFile(wb, 'recuperacionesDel'+document.getElementById('fechaInicio').value+'Al'+document.getElementById('fechaFin').value +'.xlsx');
   });
-/*
-  document.getElementById('exportPDFButton').addEventListener('click', () => {
-    // Crear un objeto de documento PDF
-    var pdf = new jsPDF();
-  
-    // Configurar la posición inicial para escribir en el PDF
-    var y = 10;
-  
-    // Iterar sobre los resultados y agregarlos al PDF
-    resultados.forEach(function(resultados) {
-      pdf.text(10, y, `Nombre Cliente: ${resultados.nombreCliente}`);
-      pdf.text(10, y + 10, `Nombre Cartera: ${resultados.nombreCartera}`);
-      // ... Agregar otros campos según sea necesario
-      y += 20; // Ajustar el espacio entre las líneas
-    });
-  
-    // Guardar o mostrar el archivo PDF
-    pdf.save('resultados.pdf');
-  });
 
-*/
   document.getElementById('exportXlsButtonC').addEventListener('click', () => {
     // Crear un objeto de trabajo de Excel
     var wb = XLSX.utils.book_new();
@@ -286,29 +313,7 @@ document.getElementById('buscarButtonC').addEventListener('click', () => {
     XLSX.writeFile(wb, 'colocacionesDel'+document.getElementById('fechaInicioc').value+'Al'+document.getElementById('fechaFinc').value +'.xlsx');
   });
 
-/*
-  document.getElementById('exportarPDFButtonC').addEventListener('click', () => {
-    // Crear un objeto de documento PDF
-    var pdf = new jsPDF();
-  
-    // Configurar la posición inicial para escribir en el PDF
-    var y = 10;
-  
-    // Iterar sobre los resultados y agregarlos al PDF
-    resultadosArray.forEach(function(resultadosArray) {
-      pdf.text(10, y, `Nombre Cliente: ${resultadosArray.nombreCliente}`);
-      pdf.text(10, y + 10, `Nombre Cartera: ${resultadosArray.nombreCartera}`);
-      // ... Agregar otros campos según sea necesario
-      y += 20; // Ajustar el espacio entre las líneas
-    });
-  
-    // Guardar o mostrar el archivo PDF
-    pdf.save('resultados.pdf');
-  });
-*/
-/********
- * 
- */
+
 
 document.getElementById('limpiarTablaButton').addEventListener('click', () => {
     // Limpia el contenido de la tabla
@@ -328,7 +333,18 @@ document.getElementById('limpiarTablaButtonC').addEventListener('click', () => {
   
 
 /////////////////////////*/
+// En tu archivo JavaScript
+const logoutButton = document.getElementById('logout');
 
+logoutButton.addEventListener('click', () => {
+  firebase.auth().signOut().then(() => {
+    // Logout exitoso, redirige a la página de inicio de sesión
+    window.location.href = '/index.html';
+  }).catch((error) => {
+    // Maneja errores durante el logout
+    console.error("Error durante el logout:", error);
+  });
+});
 
 $('form').submit(function(e){
   e.preventDefault();
@@ -405,7 +421,7 @@ function mostrarProductos(nombre, login, estado,rol){
 };
 
 function mostrarProductosC(nombreCliente, nombreCartera, 
-    capitalPrestado,descripcionPlan,frecuenciaPago,interesEfectivo,plazoEnDias){
+    capitalPrestado,descripcionPlan,frecuenciaPago,interesEfectivo,plazoEnDias,fechaDesembolso){
     /*resultadosArray.nombreCliente, 
     resultadosArray.nombreCartera,
     resultadosArray.capitalPrestado,
@@ -422,6 +438,7 @@ function mostrarProductosC(nombreCliente, nombreCartera,
     <td>${frecuenciaPago}</td>
     <td>${interesEfectivo}</td>
     <td>${plazoEnDias}</td>
+    <td>${fechaDesembolso}</td>
     `
   };
 
