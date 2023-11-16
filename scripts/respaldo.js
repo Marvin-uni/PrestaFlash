@@ -1,3 +1,6 @@
+//import { getStorage, ref, uploadBytes } from "firebase/storage";
+
+
 const loggedOutLinks = document.querySelectorAll(".logged-out");
 loggedOutLinks.forEach((link) => (link.style.display = "none")); 
 
@@ -45,6 +48,7 @@ function backupDatabase() {
       a.click();
 
       document.getElementById('loadingMessage').style.display = 'none';
+      document.getElementById('loadingMessage12').style.display = 'block';
     })
     .catch(error => {
       console.error('Error durante la copia de seguridad:', error);
@@ -70,30 +74,30 @@ document.getElementById('SubirGDButton').addEventListener('click', async () => {
     
           const url = URL.createObjectURL(blob);
     
-          // Crea un enlace temporal
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = `backup_${formattedDate}_${formattedTime}.json`;
+          const storageRef = firebase.storage().ref();
+
+// Genera el blob
+const blob2 = generateBlob(data);
+
+// Define la ruta y el nombre del archivo en el storage
+const filePath = 'Respaldo/Respaldo_'+formattedDate+'_'+formattedTime+'.json';
+const fileRef = storageRef.child(filePath);
+
+// Sube el blob al storage
+fileRef.put(blob2).then((snapshot) => {
+    document.getElementById('loadingMessage2').style.display = 'none';
+    document.getElementById('loadingMessage3').style.display = 'block';
+  console.log('Archivo subido con éxito:', snapshot);
+}).catch((error) => {
+    document.getElementById('loadingMessage2').style.display = 'none';
+    document.getElementById('loadingMessage3').style.display = 'none';
+  console.error('Error al subir el archivo:', error);
+});
+
     
-          // Simula un clic en el enlace para abrir el diálogo de descarga del navegador
-         // a.click();
-
-
-                 // Datos para el archivo
-       // const data = 'Contenido del archivo';
-
-        // Crear un objeto Blob
-        const blob2 = new Blob([data], { type: 'application/octet-stream' });
-
-        // Crear un enlace de descarga
-        const downloadLink = document.getElementById('downloadLink');
-        downloadLink.href = window.URL.createObjectURL(blob2);
-        downloadLink.download = formattedDate+'_'+formattedTime+'Respaldo.json'; // Sugerir un nombre de archivo
-
-        // Mostrar el enlace y permitir que el usuario haga clic en él
-        //downloadLink.style.display = 'block';
     
           document.getElementById('loadingMessage2').style.display = 'none';
+         
         })
         .catch(error => {
           console.error('Error durante la copia de seguridad:', error);
@@ -106,37 +110,8 @@ document.getElementById('SubirGDButton').addEventListener('click', async () => {
       document.getElementById('loadingMessage2').style.display = 'none';
     }
   });
-
-// Función para realizar la copia de seguridad de Firebase
-async function backupDatabase2() {
-    const currentDate = new Date();
-    const formattedDate = currentDate.toISOString().split('T')[0];
-    const formattedTime = currentDate.toTimeString().split(' ')[0];
-  
-    const databaseSnapshot = await database.ref('/').once('value');
-    const data = JSON.stringify(databaseSnapshot.val());
-  
-    try {
-      const handle = await window.showSaveFilePicker({
-        suggestedName: `backup_${formattedDate}_${formattedTime}.json`,
-        types: [{
-          description: 'JSON Files',
-          accept: {
-            'application/json': ['.json'],
-          },
-        }],
-      });
-  
-      const writable = await handle.createWritable();
-      await writable.write(data);
-      await writable.close();
-  
-      // Ocultar el mensaje de carga después de la descarga
-      document.getElementById('loadingMessage').style.display = 'none';
-    } catch (error) {
-      console.error('Error durante la copia de seguridad:', error);
-      document.getElementById('loadingMessage').style.display = 'none';
-    }
+  function generateBlob(data) {
+    const jsonData = JSON.stringify(data);
+    const blob = new Blob([jsonData], { type: 'application/json' });
+    return blob;
   }
-  
-

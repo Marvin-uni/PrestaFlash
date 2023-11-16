@@ -88,7 +88,7 @@
         </li>
         <li class="nav-item" role="presentation">
           <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">
-           <!--  Subir Copia de Seguridad a Google Drive -->
+             Generar Copia de Seguridad en la nube
         </button>
         </li>
         <li class="nav-item" role="presentation">
@@ -117,6 +117,9 @@
             <div id="loadingMessage" style="display: none;">
                 <i class="fas fa-spinner fa-spin"></i> Realizando copia de seguridad...
             </div>
+            <div id="loadingMessage12" style="display: none;">
+                <i class="fa fa-check-square-o"></i> Copia de seguridad Realizada con exito, revise su carpeta de descargas.
+            </div>
         </div>
 
 
@@ -130,19 +133,18 @@
 
             <div class="col-md-6 mt-2">
                
-                <input type="file" id="fileInput" />
+               
 
                 <button id="SubirGDButton" class="btn btn-primary me-2">
-                    <i class="fa fa-save me-2"></i>Subir a Google Drive
+                    <i class="fa fa-save me-2"></i>Generar Respaldo en la nube
                   </button>
             </div>  
             <div id="loadingMessage2" style="display: none;">
-                <i class="fas fa-spinner fa-spin"></i> Realizando copia de seguridad y enviandola a GoogleDrive...
+                <i class="fas fa-spinner fa-spin"></i> Realizando copia de seguridad y enviandola a la nube
             </div> 
-            <button id="tuBotonSaveAsId" class="btn btn-primary me-2">
-                <i class="fa fa-save me-2"></i>Guardar como
-              </button>
-              <a id="downloadLink" >Descargar Archivo</a>
+            <div id="loadingMessage3" style="display: none;">
+                <i class="fa fa-check-square-o"></i> Copia de seguridad generada y enviada a la nube
+            </div> 
             
         </div>
  
